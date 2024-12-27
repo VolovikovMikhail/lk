@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 
 const ClassifierForm = () => {
     const [formData, setFormData] = useState({
-    user: {
         gender: '',
         gpa: '',
-        points: '0',
         priority: '',
+        points: '',
         direction: ''
-    },
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            user: {
-                ...prevState.user,
-                [name]: value
-            }
+            [name]: value
         }));
     };
 
@@ -60,13 +55,21 @@ const ClassifierForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Конвертируем числовые поля в целые числа
+        const dataToSend = {
+            ...formData,
+            gpa: parseFloat(formData.gpa),
+            priority: parseInt(formData.priority),
+            points: parseInt(formData.points)
+        };
+
         try {
             const response = await fetch('https://personal-account-fastapi.onrender.com/predict/free', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({formData})
+                body: JSON.stringify(dataToSend)
             });
 
             const result = await response.json();
@@ -85,7 +88,7 @@ const ClassifierForm = () => {
                 <fieldset className="space-y-4 mb-6">
                     <label className="block text-sm font-semibold">Пол:
                         <select
-                            value={formData.user.gender}
+                            value={formData.gender}
                             name="gender"
                             onChange={handleChange}
                             className="w-full p-2 mt-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
@@ -101,7 +104,7 @@ const ClassifierForm = () => {
                         <input
                             type="number"
                             step="0.01"
-                            value={formData.user.gpa}
+                            value={formData.gpa}
                             name="gpa"
                             onChange={handleChange}
                             className="w-full p-2 mt-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
@@ -113,22 +116,22 @@ const ClassifierForm = () => {
                         <input
                         type="range"
                         min="0"
-                        max="400"
+                        max="310"
                         step="1"
-                        value={formData.user.points}
+                        value={formData.points}
                         onChange={(e) =>
-                            setFormData({ ...formData, user: { ...formData.user, points: e.target.value } })
+                            setFormData({ ...formData, points: e.target.value })
                         }
                         className="w-full mt-2"
                         />
-                        <span className="text-sm">{formData.user.points} баллов</span>
+                        <span className="text-sm">{formData.points} баллов</span>
                     </label>
 
                     <label className="block text-sm font-semibold">Приоритет:
                         <input
                             type="number"
                             step="1"
-                            value={formData.user.priority}
+                            value={formData.priority}
                             name="priority"
                             onChange={handleChange}
                             className="w-full p-2 mt-2 border rounded-lg focus:ring-2 focus:ring-purple-500"

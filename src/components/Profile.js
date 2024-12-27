@@ -101,12 +101,11 @@ const Profile = () => {
                 <h2 className="text-2xl font-bold mb-4 text-white">Рекомендательная система</h2>
                 <p className="text-white">Здесь вы можете ввести свои данные и получить рекомендации, какое направление вам больше подходит.</p>
               </div>
+              <div className="app">
+                <ClassifierForm />
+              </div>
             </>
-          )}
-          {/* Classifier */}
-          <div className="app">
-            <ClassifierForm />
-          </div>
+          )}        
         </div>
 
         {/* Profile Editing Modal */}
